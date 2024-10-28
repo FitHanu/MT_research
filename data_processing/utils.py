@@ -3,6 +3,7 @@ import math
 import os
 import time
 import constants as const
+import zipfile
 
 import psutil
 import spacy
@@ -121,4 +122,39 @@ def check_extension_is_one_of(file_path, allowed_extensions):
         return True
     else:
         return False
+
+
+def get_dirname_by_path(file_path):
+    """ Get directory out of file path """
+    return os.path.dirname(file_path)
+
+
+def get_corpus_name_by_path(file_path):
+    """ Get corpus name """
+    f_name = os.path.splitext(os.path.basename(file_path))[0]
+    return os.path.splitext(f_name)[0]
+
+
+def unzip_corpus(corpus_file_path, output_path):
+    # Check if the zip file exists
+    if not os.path.exists(corpus_file_path):
+        print(f"Error: '{corpus_file_path}' does not exist.")
+        return
+    # Unzipping the file
+    with zipfile.ZipFile(corpus_file_path, 'r') as zip_ref:
+        print(f"Unzipping '{corpus_file_path}' to '{output_path}'...")
+        zip_ref.extractall(output_path)
+        print(f"Unzipped '{corpus_file_path}' to '{output_path}' successfully.")
+
+
+def get_data_filepath_by_language_id(directory_path, lang_id):
+    """ Get data file by language id """
+    for file in os.listdir(directory_path):
+        if file.endswith(f".{lang_id}"):
+            return directory_path + os.path.sep + file
+    raise FileNotFoundError(f"Data file with language id '{lang_id}' not found in '{directory_path}', program exit.")
+
+def validate_and_create_dir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 

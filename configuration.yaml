@@ -1,0 +1,9 @@
+model_dir: run/
+
+data:
+  train_features_file: data/filtered/corpus_no_1.train.en
+  train_labels_file: tgt-train.txt
+  eval_features_file: src-val.txt
+  eval_labels_file: tgt-val.txt
+  source_vocabulary: src-vocab.txt
+  target_vocabulary: tgt-vocab.txt
