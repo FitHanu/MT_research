@@ -172,10 +172,12 @@ def get_arg():
 
 
 if __name__ == '__main__':
+    print(f"test")
     args = get_arg()
     SRC_LANG_ID = args.src
     TGT_LANG_ID = args.tgt
-    RESULT_PATH = args.result_path
+    if args.result_path not in ["./data", ""]:
+        RESULT_PATH = args.result_path
     ZIP_FILE_PATHS = args.zip_file_paths
     print(f"params  :                             \n"
           f"--------------------------------------\n"

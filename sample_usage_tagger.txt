@@ -44,4 +44,15 @@ command:
 python3 ./pos_tagging/tagger.py ./data/test_data.zh zh ./test_data/test_result/zh_result_tagged.zh 5
 python3 ./pos_tagging/tagger.py ./data/test_data.en en ./test_data/test_result/en_result_tagged.en 5
 
+python3 data_processing/process_data.py --src vi --tgt en ./data/OpenSubtitiles/en-vi.txt.zip ./data/QED/en-vi.txt.zip ./data/Wikimedia/en-vi.txt.zip
+python3 train_vocab/bpe.py --src ./data/corpus_filtered.vi --tgt ./data/corpus_filtered.en --vocab_size 60000
+python3 train_vocab/su
+bword.py --src source.model --tgt target.model --src_data ./data/corpus_filtered.vi --tgt_data ./data/corpus_filtered.en
+wc -l ./data/corpus_filtered.vi.subw
+wc -l ./data/corpus_filtered.en.subw
+head -n 5 ./data/corpus_filtered.vi.subw
+head -n 5 ./data/corpus_filtered.en.subw
+tail -n 5 ./data/corpus_filtered.vi.subw
+tail -n 5 ./data/corpus_filtered.en.subw
 
+python3 ./data_processing/partitioner.py --src ./data/corpus_filtered.vi.subw --tgt ./data/corpus_filtered.en.subw --dev 30000 --test 2500 --result_path ./data/partitioned

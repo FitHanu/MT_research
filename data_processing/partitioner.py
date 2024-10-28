@@ -27,6 +27,7 @@ def handle_write_result_files(df):
 
     df_test = df_train.sample(n = TEST_ROWS)
     df_train = df_train.drop(df_test.index)
+    df_train = df_train.sample(frac=1).reset_index(drop=True)
 
     print(f"Writing files: train: {df_train.shape[0]}, dev: {df_dev.shape[0]}, test: {df_test.shape[0]}")
     handle_write_bi_direction_files(df_train, "data.train", "")
@@ -42,15 +43,18 @@ def handle_write_bi_direction_files(data_frame, file_name, sub_dir):
 
     df_dic = data_frame.to_dict(orient='list')
 
-    source_file = (RESULT_PATH + PATH_SEP + sub_dir + PATH_SEP + file_name)
-    target_file = (RESULT_PATH + PATH_SEP + sub_dir + PATH_SEP + file_name)
+    source_file = (RESULT_PATH + PATH_SEP + "source_" + file_name)
+    target_file = (RESULT_PATH + PATH_SEP + "source_" + file_name)
 
-    with open(source_file, "w") as file:
+    if not os.path.exists(RESULT_PATH):
+        os.makedirs(RESULT_PATH)
+
+    with open(source_file, "w+") as file:
         file.write("\n".join(line for line in df_dic[COL_SRC]))
         file.write("\n")
     print("File Saved:", source_file)
 
-    with open(target_file, "w") as file:
+    with open(target_file, "w+") as file:
         file.write("\n".join(line for line in df_dic[COL_TGT]))
         file.write("\n")
     print("File Saved:", target_file)

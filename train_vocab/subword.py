@@ -5,22 +5,20 @@ SRC_MODEL = ""
 TGT_MODEL = ""
 SRC_DATA = ""
 TGT_DATA = ""
-SRC_RS_PATH = SRC_DATA + ".subw"
+SRC_RS_PATH = ""
 TGT_RS_PATH = TGT_DATA + ".subw"
 
 sp = spm.SentencePieceProcessor()
 
 def subword(model, data, result_path):
     sp.Load(model)
-
     with open(data, encoding='utf-8') as source, open(result_path, "w+", encoding='utf-8') as sub:
         for line in source:
             line = line.strip()
             line = sp.EncodeAsPieces(line)
             line = " ".join([token for token in line])
             sub.write(line + "\n")
-
-    print(f"Subworded file: {SRC_DATA} Output: {SRC_RS_PATH}")
+    print(f"Subworded file: {data} Output: {result_path}")
 
 def process():
     subword(SRC_MODEL, SRC_DATA, SRC_RS_PATH)
@@ -41,6 +39,8 @@ if __name__ == '__main__':
     SRC_DATA = args.src_data
     TGT_DATA = args.tgt_data
     print(f"SUBWORDING DATA...")
+    SRC_RS_PATH = SRC_DATA + ".subw"
+    TGT_RS_PATH = TGT_DATA + ".subw"
     print(f"params   :                             \n"
           f"---------------------------------------\n"
           f"src model: {SRC_MODEL}                 \n"

@@ -1,0 +1,215 @@
+# (optional) The directory where models and summaries will be saved.
+# Can also be set with the command line option --model_dir.
+# The directory is created if it does not exist.
+model_dir: model
+
+# (optional) Enable automatic parameters based on the selected model.
+# Can also be set with the command line option --auto_config.
+auto_config: true
+
+data:
+  # (required for train run type).
+  train_features_file: data/toy-ende/src-train.txt
+  train_labels_file: data/toy-ende/tgt-train.txt
+
+  # (optional) A list with the weights of each training files, if multiple training
+  # files were configured (default: null).
+  train_files_weights: null
+
+  # (optional) Pharaoh alignments of the training files.
+  train_alignments: data/toy-ende/alignments-train.txt
+
+  # (optional) File containing the weight of each example (one weight per line).
+  # The loss value of each example is multiplied by its corresponding weight.
+  example_weights: data/toy-ende/weights-train.txt
+
+  # (required for train_end_eval and eval run types).
+  eval_features_file: data/toy-ende/src-val.txt
+  eval_labels_file: data/toy-ende/tgt-val.txt
+
+  # (optional) Models may require additional resource files (e.g. vocabularies).
+  source_vocabulary: data/toy-ende/src-vocab.txt
+  target_vocabulary: data/toy-ende/tgt-vocab.txt
+
+# Model and optimization parameters.
+params:
+  # The optimizer class name in tf.keras.optimizers or tfa.optimizers.
+  optimizer: Adam
+  # (optional) Additional optimizer parameters as defined in their documentation.
+  # If weight_decay is set, the optimizer will be extended with decoupled weight decay.
+  optimizer_params:
+    beta_1: 0.8
+    beta_2: 0.998
+  learning_rate: 1.0
+
+  # (optional) If set, overrides all dropout values configured in the model definition.
+  dropout: 0.3
+
+  # (optional) Weights regularization penalty (default: null).
+  regularization:
+    type: l2  # can be "l1", "l2", "l1_l2" (case-insensitive).
+    scale: 1e-4  # if using "l1_l2" regularization, this should be a YAML list.
+
+  # (optional) Average loss in the time dimension in addition to the batch dimension
+  # (default: true when using "tokens" batch type, false otherwise).
+  average_loss_in_time: false
+  # (optional) High training loss values considered as outliers will be masked (default: false).
+  mask_loss_outliers: false
+
+  # (optional) The learning rate minimum value (default: 0).
+  minimum_learning_rate: 0.0001
+
+  # (optional) Type of scheduled sampling (can be "constant", "linear", "exponential",
+  # or "inverse_sigmoid", default: "constant").
+  scheduled_sampling_type: constant
+  # (optional) Probability to read directly from the inputs instead of sampling categorically
+  # from the output ids (default: 1).
+  scheduled_sampling_read_probability: 1
+  # (optional unless scheduled_sampling_type is set) The constant k of the schedule.
+  scheduled_sampling_k: 0
+
+  # (optional) The label smoothing value.
+  label_smoothing: 0.1
+
+  # (optional) Width of the beam search (default: 1).
+  beam_width: 5
+  # (optional) Number of hypotheses to return (default: 1). Set 0 to return all
+  # available hypotheses. This value is also set by infer/n_best.
+  num_hypotheses: 1
+  # (optional) Length penaly weight to use during beam search (default: 0).
+  length_penalty: 0.2
+  # (optional) Coverage penaly weight to use during beam search (default: 0).
+  coverage_penalty: 0.2
+  # (optional) Sample predictions from the top K most likely tokens (requires
+  # beam_width to 1). If 0, sample from the full output distribution (default: 1).
+  sampling_topk: 1
+  # (optional) High temperatures generate more random samples (default: 1).
+  sampling_temperature: 1
+  # (optional) Sequence of noise to apply to the decoding output. Each element
+  # should be a noise type (can be: "dropout", "replacement", "permutation") and
+  # the module arguments
+  # (see https://opennmt.net/OpenNMT-tf/package/opennmt.data.noise.html)
+  decoding_noise:
+    - dropout: 0.1
+    - replacement: [0.1, ｟unk｠]
+    - permutation: 3
+  # (optional) Define the subword marker. This is useful to apply noise at the
+  # word level instead of the subword level (default: ￭).
+  decoding_subword_token: ￭
+  # (optional) Whether decoding_subword_token is used as a spacer (as in SentencePiece)
+  # or a joiner (as in BPE).
+  # If unspecified, will infer  directly from decoding_subword_token.
+  decoding_subword_token_is_spacer: false
+  # (optional) Minimum length of decoded sequences, end token excluded (default: 0).
+  minimum_decoding_length: 0
+  # (optional) Maximum length of decoded sequences, end token excluded (default: 250).
+  maximum_decoding_length: 250
+
+  # (optional) Replace unknown target tokens by the original source token with the
+  # highest attention (default: false).
+  replace_unknown_target: false
+
+  # (optional) The type of guided alignment cost to compute (can be: "null", "ce", "mse",
+  # default: "null").
+  guided_alignment_type: null
+  # (optional) The weight of the guided alignment cost (default: 1).
+  guided_alignment_weight: 1
+
+  # (optional) Enable contrastive learning mode, see
+  # https://www.aclweb.org/anthology/P19-1623 (default: false).
+  # See also "decoding_subword_token" that is used by this mode.
+  contrastive_learning: false
+  # (optional) The value of the parameter eta in the max-margin loss (default: 0.1).
+  max_margin_eta: 0.1
+  # (optional) Size of output on an exported TensorFlow Lite model
+  tflite_output_size: 250
+
+
+# Training options.
+train:
+  # (optional) Training batch size. If set to 0, the training will search the largest
+  # possible batch size.
+  batch_size: 144
+  # (optional) Batch size is the number of "examples" or "tokens" (default: "examples").
+  batch_type: examples
+  # (optional) Tune gradient accumulation to train with at least this effective batch size
+  # (default: null).
+  effective_batch_size: 25000
+
+  # (optional) Save a checkpoint every this many steps (default: 5000).
+  save_checkpoints_steps: null
+  # (optional) How many checkpoints to keep on disk.
+  keep_checkpoint_max: 3
+
+  # (optional) Dump summaries and logs every this many steps (default: 100).
+  save_summary_steps: 100
+
+  # (optional) Maximum training step. If not set, train forever.
+  max_step: 100000
+  # (optional) If true, makes a single pass over the training data (default: false).
+  single_pass: false
+
+  # (optional) The maximum length of feature sequences during training (default: null).
+  maximum_features_length: 70
+  # (optional) The maximum length of label sequences during training (default: null).
+  maximum_labels_length: 70
+
+  # (optional) The width of the length buckets to select batch candidates from.
+  # A smaller value means less padding and increased efficiency. (default: 1).
+  length_bucket_width: 1
+
+  # (optional) The number of elements from which to sample during shuffling (default: 500000).
+  # Set 0 or null to disable shuffling, -1 to match the number of training examples.
+  sample_buffer_size: 500000
+
+  # (optional) Moving average decay. Reasonable values are close to 1, e.g. 0.9999, see
+  # https://www.tensorflow.org/api_docs/python/tf/train/ExponentialMovingAverage
+  # (default: null)
+  moving_average_decay: 0.9999
+  # (optional) Number of checkpoints to average at the end of the training to the directory
+  # model_dir/avg (default: 0).
+  average_last_checkpoints: 8
+
+
+# (optional) Evaluation options.
+eval:
+  # (optional) The batch size to use (default: 32).
+  batch_size: 30
+  # (optional) Batch size is the number of "examples" or "tokens" (default: "examples").
+  batch_type: examples
+
+  # (optional) Evaluate every this many steps (default: 5000).
+  steps: 5000
+
+  # (optional) Save evaluation predictions in model_dir/eval/.
+  save_eval_predictions: false
+  # (optional) Scorer or list of scorers that are called on the saved evaluation
+  # predictions.
+  # Available scorers: bleu, rouge, wer, ter, prf, chrf, chrf++
+  scorers: bleu
+
+  # (optional) The width of the length buckets to select batch candidates from.
+  # If set, the eval data will be sorted by length to increase the translation
+  # efficiency. The predictions will still be outputted in order as they are
+  # available (default: 0).
+  length_bucket_width: 5
+
+  # (optional) Export a model when a metric has the best value so far (default: null).
+  export_on_best: bleu
+  # (optional) Format of the exported model (can be: "saved_model, "checkpoint",
+  # "ctranslate2", "ctranslate2_int8", "ctranslate2_int16", "ctranslate2_float16",
+  # default: "saved_model").
+  export_format: single_ckpt
+  # (optional) Maximum number of exports to keep on disk (default: 5).
+  max_exports_to_keep: 5
+
+  # (optional) Early stopping condition.
+  # Should be read as: stop the training if "metric" did not improve more
+  # than "min_improvement" in the last "steps" evaluations.
+  early_stopping:
+    # (optional) The target metric name (default: "loss").
+    metric: bleu
+    # (optional) The metric should improve at least by this much to be considered
+    # as an improvement (default: 0)
+    min_improvement: 0.01
+    steps: 4
