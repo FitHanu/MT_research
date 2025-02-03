@@ -1,12 +1,6 @@
 import argparse
 import sentencepiece as spm
 
-SRC_MODEL = ""
-TGT_MODEL = ""
-SRC_DATA = ""
-TGT_DATA = ""
-SRC_RS_PATH = ""
-TGT_RS_PATH = TGT_DATA + ".subw"
 
 sp = spm.SentencePieceProcessor()
 
@@ -20,9 +14,11 @@ def subword(model, data, result_path):
             sub.write(line + "\n")
     print(f"Subworded file: {data} Output: {result_path}")
 
-def process():
-    subword(SRC_MODEL, SRC_DATA, SRC_RS_PATH)
-    subword(TGT_MODEL, TGT_DATA, TGT_RS_PATH)
+def process(src, tgt, src_data, tgt_data):
+    src_rs_path = src_data + ".subw"
+    tgt_rs_path = tgt_data + ".subw"
+    subword(src, src_data, src_rs_path)
+    subword(tgt, tgt_data, tgt_rs_path)
 
 def get_arg():
     parser = argparse.ArgumentParser(description='Process Arguments')
@@ -39,8 +35,7 @@ if __name__ == '__main__':
     SRC_DATA = args.src_data
     TGT_DATA = args.tgt_data
     print(f"SUBWORDING DATA...")
-    SRC_RS_PATH = SRC_DATA + ".subw"
-    TGT_RS_PATH = TGT_DATA + ".subw"
+
     print(f"params   :                             \n"
           f"---------------------------------------\n"
           f"src model: {SRC_MODEL}                 \n"
@@ -49,4 +44,4 @@ if __name__ == '__main__':
           f"tgt data : {TGT_DATA}                  \n"
           f"---------------------------------------\n"
           )
-    process()
+    process(SRC_MODEL, TGT_MODEL, SRC_DATA, TGT_DATA)
