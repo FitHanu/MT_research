@@ -1,3 +1,4 @@
+import argparse
 """
 I Wrote this script as separate module along with tagger.py for quick and maintainability
 
@@ -16,3 +17,12 @@ Step 2. For each sentence from initial data
         Step 2.4.2.         
 
 """
+
+def get_arg():
+    parser = argparse.ArgumentParser(description='Process Arguments, please provide matching tag & subw files for accurate result')
+    parser.add_argument('--tag_file', type=str, help='Tagged File', required=True)
+    parser.add_argument('--subw_file', type=str, help='Subworded File', required=True)
+    parser.add_argument('--result_path', type=str, default='./data', help='')
+    parser.add_argument('--result_name', type=str, default='', help='')
+    return parser.parse_args()
+
