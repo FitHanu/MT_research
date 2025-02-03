@@ -45,7 +45,6 @@ def get_arg():
     parser.add_argument('--tgt', type=str, help='Target Path', required=True)
     parser.add_argument('--type', type=str, choices=ALLOWED_VOCAB_TYPES, help='Vocabulary Type', default='unigram')
     parser.add_argument('--vocab_size', type=int, help="Vocabulary Size", default=0)
-    parser.add_argument()
     return parser.parse_args()
 
 if __name__ == '__main__':
