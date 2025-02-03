@@ -99,6 +99,7 @@ def handle_write_bi_direction_files(data_frame, file_name, sub_dir):
 
     df_dic = data_frame.to_dict(orient='list')
 
+    os.makedirs(os.path.dirname(RESULT_PATH), exist_ok=True)
     source_file = (RESULT_PATH + PATH_SEP + sub_dir + PATH_SEP + file_name + "." + SRC_LANG_ID)
     target_file = (RESULT_PATH + PATH_SEP + sub_dir + PATH_SEP + file_name + "." + TGT_LANG_ID)
 
