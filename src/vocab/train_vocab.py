@@ -1,6 +1,5 @@
 import sentencepiece as spm
 import argparse
-from utils import join_params
 
 
 ALLOWED_VOCAB_TYPES = ['bpe', 'unigram']
