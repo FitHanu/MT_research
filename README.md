@@ -43,8 +43,7 @@ python3 ./pos_tagging/tagger.py ./data/test_data.en en ./test_data/test_result/e
 
 python3 data_processing/process_data.py --src vi --tgt en ./data/OpenSubtitiles/en-vi.txt.zip ./data/QED/en-vi.txt.zip ./data/Wikimedia/en-vi.txt.zip
 python3 train_vocab/bpe.py --src ./data/corpus_filtered.vi --tgt ./data/corpus_filtered.en --vocab_size 60000
-python3 train_vocab/su
-bword.py --src source.model --tgt target.model --src_data ./data/corpus_filtered.vi --tgt_data ./data/corpus_filtered.en
+python3 train_vocab/subword.py --src source.model --tgt target.model --src_data ./data/corpus_filtered.vi --tgt_data ./data/corpus_filtered.en
 wc -l ./data/corpus_filtered.vi.subw
 wc -l ./data/corpus_filtered.en.subw
 head -n 5 ./data/corpus_filtered.vi.subw

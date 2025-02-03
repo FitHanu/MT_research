@@ -21,7 +21,11 @@ def load_model(language_id):
         nlp = spacy.load(os.path.join(cache_dir, model_name))
     except OSError:
         print("Model not initialized. Downloading model: " + model_name + "...")
+
+        # Handle vi model exclusively
         if language_id == "vi":
+            # Model downloaded from installation step
+            
             # model_path = str(const.THIRD_PARTY_MODEL_PATHS[language_id])
             # spacy.cli.download(model_path)
             nlp = spacy.load(model_name)
@@ -65,6 +69,7 @@ def process(source_file_path, result_file_name, language_id, batch_size_, core_n
     nlp = spacy.blank(language_id)
     if language_id == "vi":
         vi_flag = True
+        
     #disable unnecessary pipes
     print("Available pipes: ", nlp.pipe_names)
     other_pipes = [pipe for pipe in nlp.pipe_names if pipe not in const.ALLOWED_PIPE_NAMES_LIKE]
@@ -72,6 +77,7 @@ def process(source_file_path, result_file_name, language_id, batch_size_, core_n
     nlp.disable_pipes(*other_pipes)
     sentences = read_file(source_file_path)
     print("File's number of rows: " + str(len(sentences)))
+    
     # device_compatible_batch_size = read_cached_batch_size()
     load_model(language_id)
     processed_sentences = pos_tag_sentences(sentences, batch_size_)

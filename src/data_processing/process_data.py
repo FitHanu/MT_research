@@ -37,10 +37,10 @@ def filter_data(df, corpus_no):
     # Delete nan
     print(f"Filtering data for corpus no: {corpus_no}")
     df = df.dropna()
-    print("--- Rows with Empty Cells Deleted\t--> Rows:", df.shape[0])
+    print("--- Rows with Empty Cells Deleted\t--> Rows left:", df.shape[0])
     # Drop duplicates
     df = df.drop_duplicates()
-    print("--- Duplicates Deleted\t\t\t--> Rows:", df.shape[0])
+    print("--- Duplicates Deleted\t\t\t--> Rows left:", df.shape[0])
     # Drop copy-source rows
     df["Source-Copied"] = df[COL_SRC] == df[COL_TGT]
     df = df.set_index(['Source-Copied'])
@@ -50,7 +50,7 @@ def filter_data(df, corpus_no):
         pass
     df = df.reset_index()
     df = df.drop(['Source-Copied'], axis=1)
-    print("--- Source-Copied Rows Deleted\t\t--> Rows:", df.shape[0])
+    print("--- Source-Copied Rows Deleted\t\t--> Rows left:", df.shape[0])
     # Drop too-long rows (source or target)
     # Based on your language, change the values "2" and "200"
     df["Too-Long"] = ((df[COL_SRC].str.count(' ') + 1) > (
@@ -66,18 +66,18 @@ def filter_data(df, corpus_no):
         pass
     df = df.reset_index()
     df = df.drop(['Too-Long'], axis=1)
-    print("--- Too Long Source/Target Deleted\t--> Rows:", df.shape[0])
+    print("--- Too Long Source/Target Deleted\t--> Rows left:", df.shape[0])
     # Remove HTML and normalize
     # Use str() to avoid (TypeError: expected string or bytes-like object)
     # Note: removing tags should be before removing empty cells because some cells might have only tags and become empty.
     df = df.replace(r'<.*?>|&lt;.*?&gt;|&?(amp|nbsp|quot);|{}', ' ', regex=True)
     df = df.replace(r'  ', ' ', regex=True)  # replace double-spaces with one space
-    print("--- HTML Removed\t\t\t--> Rows:", df.shape[0])
+    print("--- HTML Removed\t\t\t--> Rows left:", df.shape[0])
     # Replace empty cells with NaN
     df = df.replace(r'^\s*$', np.nan, regex=True)
     # Delete nan (already there, or generated from the previous steps)
     df = df.dropna()
-    print("--- Rows with Empty Cells Deleted\t--> Rows:", df.shape[0])
+    print("--- Rows with Empty Cells Deleted\t--> Rows left:", df.shape[0])
     df = df.reset_index(drop=True)
     #
     # # Shuffle the data
