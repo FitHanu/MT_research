@@ -44,7 +44,7 @@ def handle_write_bi_direction_files(data_frame, file_name, sub_dir):
     df_dic = data_frame.to_dict(orient='list')
 
     source_file = (RESULT_PATH + PATH_SEP + "source_" + file_name)
-    target_file = (RESULT_PATH + PATH_SEP + "source_" + file_name)
+    target_file = (RESULT_PATH + PATH_SEP + "target_" + file_name)
 
     if not os.path.exists(RESULT_PATH):
         os.makedirs(RESULT_PATH)
