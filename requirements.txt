@@ -6,8 +6,6 @@ psutil~=6.0.0
 https://gitlab.com/trungtv/vi_spacy/-/raw/master/packages/vi_core_news_lg-3.6.0/dist/vi_core_news_lg-3.6.0.tar.gz
 torch~=2.2.2
 transformers~=4.36.2
-spacy~=3.7.2
+spacy~=3.6.0
 pandas~=2.2.2
 sentencepiece
-tensorflow[and-cuda]
-OpenNMT-tf
